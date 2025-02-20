@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# simple-yt-api
-A simple and easy-to-use YouTube API Wrapper
-=======
 # Simple YouTube API
 
 A lightweight Python wrapper for extracting video metadata and transcripts from YouTube videos.
@@ -83,4 +79,3 @@ The library includes custom exceptions:
 ## License
 
 This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
->>>>>>> e4f223a (Initial commit)
