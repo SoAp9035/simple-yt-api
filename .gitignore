@@ -1,7 +1,6 @@
 # Python specific
 __pycache__/
 *.py[cod]
-setup.py
 *$py.class
 *.so
 .Python
