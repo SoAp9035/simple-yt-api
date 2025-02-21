@@ -35,16 +35,16 @@ print(transcript)
 
 # Get both metadata and transcript at once
 data, transcript = yt.get_video_data_and_transcript(
-    languages=['en', 'es'],  # Priority languages
+    languages=['en', 'tr'],  # Priority languages
     as_dict=False  # Return transcript as plain text
 )
 ```
 
 ## API Reference
 
-### YtAPI Class
+### YouTubeAPI Class
 
-#### `YtAPI(url: str)`
+#### `YouTubeAPI(url: str)`
 Initialize the API with a YouTube video URL.
 
 #### `data() -> dict`
@@ -56,7 +56,7 @@ Returns video metadata dictionary containing:
 
 #### `get_transcript(languages: list = [], as_dict: bool = False) -> str | dict`
 Get video transcript in specified languages.
-- `languages`: List of language codes (e.g., ['en', 'es'])
+- `languages`: List of language codes (e.g., ['en', 'tr'])
 - `as_dict`: If True, returns timestamp dictionary format
 
 #### `get_video_data_and_transcript(languages: list = [], as_dict: bool = False) -> tuple`
