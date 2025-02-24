@@ -60,7 +60,7 @@ Get video transcript in specified languages.
 - `as_dict`: If True, returns timestamp dictionary format
 
 #### `get_video_data_and_transcript(languages: list = [], as_dict: bool = False) -> tuple`
-Get both metadata and transcript in one call.
+Returns both video metadata and transcript for a YouTube video in one call without worrying about errors.
 
 ## Error Handling
 
@@ -71,10 +71,9 @@ The library includes custom exceptions:
 
 ## Requirements
 
-- Python 3.7+
-- requests
-- beautifulsoup4
-- youtube-transcript-api
+- requests>=2.32.3
+- beautifulsoup4>=4.13.3
+- youtube-transcript-api>=0.6.3
 
 ## License
 

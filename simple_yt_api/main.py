@@ -26,7 +26,7 @@ class NoTranscriptFound(Exception):
 
 
 class YouTubeAPI:
-    def __init__(self, url: str):
+    def __init__(self, url: str) -> None:
         self.user_agent = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
         }
@@ -101,7 +101,7 @@ class YouTubeAPI:
 
     def get_video_data_and_transcript(self, languages: list = [], as_dict: bool = False) -> tuple:
         """
-        Gets both video metadata and transcript for a YouTube video.
+        Returns both video metadata and transcript for a YouTube video in one call without worrying about errors.
         
         Args:
             languages (list): List of language codes to search for transcripts
