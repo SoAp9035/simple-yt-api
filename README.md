@@ -65,7 +65,7 @@ Returns both video metadata and transcript for a YouTube video in one call witho
 ## Error Handling
 
 The library includes custom exceptions:
-- `NotValidURL`: Invalid YouTube URL format
+- `InvalidURL`: Invalid YouTube URL format
 - `NoVideoFound`: Video not accessible or doesn't exist
 - `NoTranscriptFound`: No transcript available for the video
 
@@ -78,3 +78,8 @@ The library includes custom exceptions:
 ## License
 
 This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
+
+## Links
+
+- [GitHub Repository](https://github.com/SoAp9035/simple-yt-api)
+- [PyPI Package](https://pypi.org/project/simple-yt-api/)
