@@ -1,1 +1,6 @@
-from .main import YouTubeAPI
+from .main import (
+    YouTubeAPI,
+    InvalidURL,
+    NoVideoFound,
+    NoTranscriptFound
+)

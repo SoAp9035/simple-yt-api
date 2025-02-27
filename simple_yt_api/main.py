@@ -4,23 +4,23 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
 
 
-class NotValidURL(Exception):
-    def __init__(self, message: str="Not a valid Youtube URL"):
+class InvalidURL(Exception):
+    def __init__(self, message: str="Invalid YouTube URL format"):
         self.message = message
         super().__init__(self.message)
 
 class NoVideoFound(Exception):
-    def __init__(self, message: str="No video found"):
+    def __init__(self, message: str="Video not accessible or doesn't exist"):
         self.message = message
         super().__init__(self.message)
 
 # class NoMetadataFound(Exception):
-#     def __init__(self, message: str="No Metadata found"):
+#     def __init__(self, message: str="No Metadata Found"):
 #         self.message = message
 #         super().__init__(self.message)
 
 class NoTranscriptFound(Exception):
-    def __init__(self, message: str="No transcript found"):
+    def __init__(self, message: str="No transcript available for the video"):
         self.message = message
         super().__init__(self.message)
 
@@ -32,20 +32,27 @@ class YouTubeAPI:
         }
         self.url = url
         if not self._url_check():
-            raise NotValidURL
+            raise InvalidURL
 
     def _url_check(self) -> bool:
-        if self.url.startswith(("https://www.youtube.com/watch?v=", "https://youtu.be/")):
+        if self.url.startswith(("https://www.youtube.com/watch?v=", "https://youtu.be/", "https://www.youtube.com/shorts/")):
             return True
         else:
             return False
 
     def data(self) -> dict:
         """
-        Returns video metadata.
+        Returns video metadata dictionary containing:
+            - `video_id`: YouTube video ID
+            - `title`: Video title
+            - `img_url`: Thumbnail URL
+            - `short_description`: Video description
                 
         Returns:
             dict: Video metadata
+
+        Raises:
+            NoVideoFound: No Video Found
         """
         response = requests.get(self.url, headers=self.user_agent)
         if response.status_code != 200:
@@ -61,12 +68,14 @@ class YouTubeAPI:
         except Exception:
             raise NoVideoFound
 
-        return {
+        self._data = {
             "video_id": self._video_id,
             "title": title,
             "img_url": img_url,
             "short_description": description
         }
+
+        return self._data
     
     def get_transcript(self, languages: list = [], as_dict: bool = False) -> str | dict:
         """
@@ -75,12 +84,17 @@ class YouTubeAPI:
         
         Args:
             languages (list): List of language codes to search for transcripts
-            as_dict (bool): If True, returns transcript as dictionary, if False returns as plain text
+            as_dict (bool): If `True`, returns transcript as dictionary, if `False` returns as plain text
 
         Returns:
             str|dict: Video transcript either as plain text (str) or as dictionary (dict)
+        
+        Raises:
+            NoTranscriptFound: No Transcript Found
         """
-        self.data()
+        if not self._data:
+            self.data()
+
         language_codes = []
         try:
             transcript_list = YouTubeTranscriptApi.list_transcripts(self._video_id)
@@ -105,17 +119,16 @@ class YouTubeAPI:
         
         Args:
             languages (list): List of language codes to search for transcripts
-            as_dict (bool): If True, returns transcript as dictionary, if False returns as plain text
+            as_dict (bool): If `True`, returns transcript as dictionary, if `False` returns as plain text
 
         Returns:
             tuple:
-                - data (dict): Video metadata, None if not found
-                - transcript (str|dict): Video transcript if available, None if not found
+                - data (dict): Video metadata, `None` if not found
+                - transcript (str|dict): Video transcript if available, `None` if not found
         """
         try:
-            yt = YouTubeAPI(self.url)
-            data = yt.data()
-            transcript = yt.get_transcript(languages=languages, as_dict=as_dict)
+            data = self.data()
+            transcript = self.get_transcript(languages=languages, as_dict=as_dict)
         except NoTranscriptFound as e:
             transcript = None
             print("Error:", e)
