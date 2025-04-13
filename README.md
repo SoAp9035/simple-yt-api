@@ -83,3 +83,4 @@ This project is licensed under the [MIT](https://choosealicense.com/licenses/mit
 
 - [GitHub Repository](https://github.com/SoAp9035/simple-yt-api)
 - [PyPI Package](https://pypi.org/project/simple-yt-api/)
+- [Buy Me a Coffee](https://buymeacoffee.com/soap9035/)
