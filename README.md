@@ -75,6 +75,10 @@ The library includes custom exceptions:
 - beautifulsoup4>=4.13.3
 - youtube-transcript-api>=0.6.3
 
+## Disclaimer
+
+This is an unofficial tool created by independent developers with no affiliation to any video platforms. The creators take no responsibility for how it is used. Users must ensure their usage complies with applicable terms of service and laws. The package may stop working if underlying platforms change their structure. Use at your own risk.
+
 ## License
 
 This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
