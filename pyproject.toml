@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=78.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simple-yt-api"
+version = "1.1.2"
+authors = [
+    {name = "Ahmet Burhan Kayalı", email = "ahmetburhan1703@gmail.com"},
+]
+description = "A simple and easy-to-use YouTube API Wrapper"
+readme = "README.md"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Text Processing :: Markup :: HTML",
+    "License :: OSI Approved :: MIT License",
+]
+keywords = ["simple", "youtube", "api", "wrapper"]
+dependencies = [
+    "requests>=2.32.3",
+    "beautifulsoup4>=4.13.3",
+    "youtube-transcript-api>=0.6.3",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/SoAp9035/simple-yt-api"
+"Bug Tracker" = "https://github.com/SoAp9035/simple-yt-api/issues"
