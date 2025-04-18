@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
-from .exceptions import InvalidURL, NoVideoFound, NoTranscriptFound
+from .exceptions import InvalidURL, NoVideoFound, NoMetadataFound, NoTranscriptFound
+from .utils import is_valid_youtube_url
 
 
 class YouTubeAPI:
@@ -10,15 +11,13 @@ class YouTubeAPI:
         self._user_agent = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
         }
-        self._url = url
-        if not self._url_check():
+        self.url = url
+
+        if not is_valid_youtube_url(self.url):
             raise InvalidURL
 
-    def _url_check(self) -> bool:
-        if self._url.startswith(("https://www.youtube.com/watch?v=", "https://youtu.be/", "https://www.youtube.com/shorts/")):
-            return True
-        else:
-            return False
+        self._video_id: str | None = None
+        self._data: dict | None = None
 
     def data(self) -> dict:
         """
@@ -34,7 +33,7 @@ class YouTubeAPI:
         Raises:
             NoVideoFound: No Video Found
         """
-        response = requests.get(self._url, headers=self._user_agent)
+        response = requests.get(self.url, headers=self._user_agent)
         if response.status_code != 200:
             raise NoVideoFound
         
@@ -46,7 +45,7 @@ class YouTubeAPI:
             img_url = soup.find(name="meta", property="og:image").get("content")
             description = soup.find(name="meta", property="og:description").get("content")
         except Exception:
-            raise NoVideoFound
+            raise NoMetadataFound
 
         self._data = {
             "video_id": self._video_id,

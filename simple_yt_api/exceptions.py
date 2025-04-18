@@ -10,6 +10,12 @@ class NoVideoFound(Exception):
         self.message = message
         super().__init__(self.message)
 
+class NoMetadataFound(Exception):
+    """Custom exception when no metadata is found for the video."""
+    def __init__(self, message: str="No metadata found for the video"):
+        self.message = message
+        super().__init__(self.message)
+
 class NoTranscriptFound(Exception):
     """Custom exception when no transcript is available for the video."""
     def __init__(self, message: str="No transcript available for the video"):
