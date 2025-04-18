@@ -7,6 +7,15 @@ from .utils import is_valid_youtube_url
 
 
 class YouTubeAPI:
+    """
+    A simple API to fetch YouTube video metadata and transcripts.
+
+    Args:
+        url (str): The URL of the YouTube video.
+
+    Raises:
+        InvalidURL: Invalid URL
+    """
     def __init__(self, url: str) -> None:
         self._user_agent = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
@@ -25,13 +34,14 @@ class YouTubeAPI:
             - `video_id`: YouTube video ID
             - `title`: Video title
             - `img_url`: Thumbnail URL
-            - `short_description`: Video description
+            - `short_description`: Short video description
                 
         Returns:
             dict: Video metadata
 
         Raises:
             NoVideoFound: No Video Found
+            NoMetadataFound: No Metadata Found
         """
         response = requests.get(self.url, headers=self._user_agent)
         if response.status_code != 200:
