@@ -2,40 +2,20 @@ import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
-
-
-class InvalidURL(Exception):
-    def __init__(self, message: str="Invalid YouTube URL format"):
-        self.message = message
-        super().__init__(self.message)
-
-class NoVideoFound(Exception):
-    def __init__(self, message: str="Video not accessible or doesn't exist"):
-        self.message = message
-        super().__init__(self.message)
-
-# class NoMetadataFound(Exception):
-#     def __init__(self, message: str="No Metadata Found"):
-#         self.message = message
-#         super().__init__(self.message)
-
-class NoTranscriptFound(Exception):
-    def __init__(self, message: str="No transcript available for the video"):
-        self.message = message
-        super().__init__(self.message)
+from .exceptions import InvalidURL, NoVideoFound, NoTranscriptFound
 
 
 class YouTubeAPI:
     def __init__(self, url: str) -> None:
-        self.user_agent = {
+        self._user_agent = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
         }
-        self.url = url
+        self._url = url
         if not self._url_check():
             raise InvalidURL
 
     def _url_check(self) -> bool:
-        if self.url.startswith(("https://www.youtube.com/watch?v=", "https://youtu.be/", "https://www.youtube.com/shorts/")):
+        if self._url.startswith(("https://www.youtube.com/watch?v=", "https://youtu.be/", "https://www.youtube.com/shorts/")):
             return True
         else:
             return False
@@ -54,7 +34,7 @@ class YouTubeAPI:
         Raises:
             NoVideoFound: No Video Found
         """
-        response = requests.get(self.url, headers=self.user_agent)
+        response = requests.get(self._url, headers=self._user_agent)
         if response.status_code != 200:
             raise NoVideoFound
         
