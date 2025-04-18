@@ -11,8 +11,7 @@ def is_valid_youtube_url(url: str) -> bool:
     if url.startswith((
         "https://youtu.be/",
         "https://www.youtube.com/watch?v=",
-        "https://www.youtube.com/shorts/",
-        "https://www.youtube.com/embed/"
+        "https://www.youtube.com/shorts/"
         )):
         return True
     else:
