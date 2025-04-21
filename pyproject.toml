@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "simple-yt-api"
-version = "1.1.2"
+version = "2.0.0"
 authors = [
     {name = "Ahmet Burhan Kayalı", email = "ahmetburhan1703@gmail.com"},
 ]
-description = "A simple and easy-to-use YouTube API Wrapper"
+description = "A simple and easy-to-use unofficial YouTube API Wrapper"
 readme = "README.md"
 classifiers = [
     "Intended Audience :: Developers",
@@ -19,11 +19,11 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: HTML",
     "License :: OSI Approved :: MIT License",
 ]
-keywords = ["simple", "youtube", "api", "wrapper"]
+keywords = ["simple", "unofficial", "youtube", "api", "wrapper"]
 dependencies = [
-    "requests>=2.32.3",
-    "beautifulsoup4>=4.13.3",
-    "youtube-transcript-api>=0.6.3",
+    "requests==2.32.3",
+    "beautifulsoup4==4.13.4",
+    "youtube-transcript-api==1.0.3",
 ]
 
 [project.urls]
