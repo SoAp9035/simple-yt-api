@@ -1,14 +1,13 @@
 # Simple YouTube API
 
-A lightweight Python wrapper for extracting video metadata and transcripts from YouTube videos.
+An unofficial lightweight Python wrapper for extracting video metadata and transcripts from YouTube videos.
 
 ## Features
 
-- 🎥 Extract video metadata (title, thumbnail, description)
-- 📝 Get video transcripts in multiple languages
+- 🎥 Extract video metadata (title, thumbnail, short description)
+- 📝 Get video transcripts in various languages
 - ⚡ Simple and easy to use interface
 - 🔒 No API key required
-- 🌐 Support for both YouTube URL formats (`youtube.com` and `youtu.be`)
 
 ## Installation
 
@@ -27,15 +26,15 @@ yt = YouTubeAPI(url)
 
 # Get video metadata
 metadata = yt.data()
-print(metadata['title'])
+print(metadata["title"])
 
 # Get video transcript
-transcript = yt.get_transcript(languages=['en'])  # Get English transcript
+transcript = yt.get_transcript(language_code="tr", as_dict=True)  # Get Turkish transcript. Defaults to "en".
 print(transcript)
 
 # Get both metadata and transcript at once
 data, transcript = yt.get_video_data_and_transcript(
-    languages=['en', 'tr'],  # Priority languages
+    language_code="es",
     as_dict=False  # Return transcript as plain text
 )
 ```
@@ -54,30 +53,32 @@ Returns video metadata dictionary containing:
 - `img_url`: Thumbnail URL
 - `short_description`: Video description
 
-#### `get_transcript(languages: list = [], as_dict: bool = False) -> str | dict`
+#### `get_transcript(language_code: str = "en", as_dict: bool = True) -> list[dict] | str`
 Get video transcript in specified languages.
-- `languages`: List of language codes (e.g., ['en', 'tr'])
-- `as_dict`: If True, returns timestamp dictionary format
+- `language_code (str, optional)`: The language code for the desired transcript. Defaults to "en".
+- `as_dict (bool, optional)`: If `True`, returns the transcript as a list of dictionaries; otherwise, returns the transcript as a string. Defaults to `True`.
 
-#### `get_video_data_and_transcript(languages: list = [], as_dict: bool = False) -> tuple`
+#### `get_video_data_and_transcript(language_code: str = "en", as_dict: bool = True) -> tuple`
 Returns both video metadata and transcript for a YouTube video in one call without worrying about errors.
 
 ## Error Handling
 
 The library includes custom exceptions:
-- `InvalidURL`: Invalid YouTube URL format
-- `NoVideoFound`: Video not accessible or doesn't exist
-- `NoTranscriptFound`: No transcript available for the video
+- `InvalidURL`: For invalid YouTube URL format.
+- `NoVideoFound`: When a video is not accessible or doesn't exist.
+- `NoMetadataFound`: When no metadata is found for the video.
+- `TranscriptsDisabled`: When transcripts are not available for the video.
+- `NoTranscriptFound`: When no transcript is available for the video.
 
 ## Requirements
 
-- requests>=2.32.3
-- beautifulsoup4>=4.13.3
-- youtube-transcript-api>=0.6.3
+- requests==2.32.3
+- beautifulsoup4==4.13.4
+- youtube-transcript-api==1.0.3
 
-## Disclaimer
+## Warning
 
-This is an unofficial tool created by independent developers with no affiliation to any video platforms. The creators take no responsibility for how it is used. Users must ensure their usage complies with applicable terms of service and laws. The package may stop working if underlying platforms change their structure. Use at your own risk.
+Sending too many requests in a short period might lead to your IP address being temporarily blocked by YouTube. Use responsibly.
 
 ## License
 
