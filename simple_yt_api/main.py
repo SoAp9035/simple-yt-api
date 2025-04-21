@@ -2,8 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
-from .exceptions import InvalidURL, NoVideoFound, NoMetadataFound, NoTranscriptFound
-from .utils import is_valid_youtube_url
+from youtube_transcript_api import _errors
+from .exceptions import InvalidURL, NoVideoFound, NoMetadataFound, TranscriptsDisabled, NoTranscriptFound
+from .utils import is_valid_youtube_url, transcript_list_to_text
 
 
 class YouTubeAPI:
@@ -65,65 +66,72 @@ class YouTubeAPI:
         }
 
         return self._data
-    
-    def get_transcript(self, languages: list = [], as_dict: bool = False) -> str | dict:
+
+    def get_transcript(self, language_code: str = "en", as_dict: bool = True) -> list[dict] | str:
         """
-        Returns the transcript found in languages.
-        If no language is found, returns the transcript in any language.
+        Returns the transcript of the video in requested language.
         
         Args:
-            languages (list): List of language codes to search for transcripts
-            as_dict (bool): If `True`, returns transcript as dictionary, if `False` returns as plain text
-
+            language_code (str, optional): The language code for the desired transcript. Defaults to "en".
+            as_dict (bool, optional): If `True`, returns the transcript as a list of dictionaries; otherwise, returns the transcript as a string. Defaults to `True`.
+        
         Returns:
-            str|dict: Video transcript either as plain text (str) or as dictionary (dict)
+            list[dict] | str: The transcript in the requested format (list of dictionaries or string).
         
         Raises:
+            TranscriptsDisabled: Transcripts Disabled
             NoTranscriptFound: No Transcript Found
         """
-        if not self._data:
-            self.data()
-
-        language_codes = []
+        self.data()
+        
         try:
-            transcript_list = YouTubeTranscriptApi.list_transcripts(self._video_id)
-            for transcript in transcript_list:
-                language_codes.append(transcript.language_code)
-            
-            if not language_codes:
+            ytt_api = YouTubeTranscriptApi()
+            transcript_list = ytt_api.list(self._video_id)
+            transcript = transcript_list.find_transcript([language_code])
+            transcript_dict_list = transcript.fetch().to_raw_data()
+        except _errors.TranscriptsDisabled:
+            raise TranscriptsDisabled
+        except _errors.NoTranscriptFound:
+            language_codes = [transcript.language_code for transcript in transcript_list]
+            try:
+                if "en" in language_codes:
+                    transcript = transcript_list.find_transcript(["en"])
+                else:
+                    transcript = transcript_list.find_transcript([language_codes[0]])
+
+                translated_transcript = transcript.translate(language_code)
+                transcript_dict_list = translated_transcript.fetch().to_raw_data()
+            except _errors.NoTranscriptFound:
                 raise NoTranscriptFound
-            
-            transcript = YouTubeTranscriptApi.get_transcript(self._video_id, languages=languages + ["en"] + language_codes)
-            text_formatted_transcript = TextFormatter().format_transcript(transcript)
-            if text_formatted_transcript:
-                return text_formatted_transcript.replace("\n", " ") if not as_dict else transcript
-            else:
+            except Exception:
                 raise NoTranscriptFound
         except Exception:
             raise NoTranscriptFound
 
-    def get_video_data_and_transcript(self, languages: list = [], as_dict: bool = False) -> tuple:
+        return transcript_dict_list if as_dict else transcript_list_to_text(transcript_dict_list)
+        
+    def get_video_data_and_transcript(self, language_code: str = "en", as_dict: bool = True) -> tuple:
         """
         Returns both video metadata and transcript for a YouTube video in one call without worrying about errors.
         
         Args:
-            languages (list): List of language codes to search for transcripts
-            as_dict (bool): If `True`, returns transcript as dictionary, if `False` returns as plain text
+            language_code (str, optional): The language code for the desired transcript. Defaults to "en".
+            as_dict (bool, optional): If `True`, returns the transcript as a list of dictionaries; otherwise, returns the transcript as a string. Defaults to `True`.
 
         Returns:
             tuple:
                 - data (dict): Video metadata, `None` if not found
-                - transcript (str|dict): Video transcript if available, `None` if not found
+                - transcript (str|dict): Video transcript, `None` if not found
         """
         try:
             data = self.data()
-            transcript = self.get_transcript(languages=languages, as_dict=as_dict)
-        except NoTranscriptFound as e:
+            transcript = self.get_transcript(language_code=language_code, as_dict=as_dict)
+        except (TranscriptsDisabled, NoTranscriptFound) as e:
             transcript = None
-            print("Error:", e)
+            print("Simple YT API:", e)
         except Exception as e:
             data = None
             transcript = None
-            print("Error:", e)
+            print("Simple YT API:", e)
 
         return data, transcript
