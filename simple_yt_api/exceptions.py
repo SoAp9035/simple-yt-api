@@ -16,6 +16,12 @@ class NoMetadataFound(Exception):
         self.message = message
         super().__init__(self.message)
 
+class TranscriptsDisabled(Exception):
+    """Custom exception when transcripts are not available for the video."""
+    def __init__(self, message: str="Transcripts are not available for the video"):
+        self.message = message
+        super().__init__(self.message)
+
 class NoTranscriptFound(Exception):
     """Custom exception when no transcript is available for the video."""
     def __init__(self, message: str="No transcript available for the video"):
