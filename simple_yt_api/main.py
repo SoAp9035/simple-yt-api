@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api.formatters import TextFormatter
 from youtube_transcript_api import _errors
 from .exceptions import InvalidURL, NoVideoFound, NoMetadataFound, TranscriptsDisabled, NoTranscriptFound
 from .utils import is_valid_youtube_url, transcript_list_to_text
