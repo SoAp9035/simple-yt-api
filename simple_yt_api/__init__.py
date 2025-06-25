@@ -1,6 +1,7 @@
 from .main import (
     YouTubeAPI,
-    InvalidURL,
     NoVideoFound,
+    NoMetadataFound,
+    TranscriptsDisabled,
     NoTranscriptFound
 )
