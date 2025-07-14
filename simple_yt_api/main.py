@@ -88,8 +88,8 @@ class YouTubeAPI:
         except _errors.TranscriptsDisabled:
             raise TranscriptsDisabled
         except _errors.NoTranscriptFound:
-            language_codes = [transcript.language_code for transcript in transcript_list]
             try:
+                language_codes = [transcript.language_code for transcript in transcript_list]
                 if "en" in language_codes:
                     transcript = transcript_list.find_transcript(["en"])
                 else:
