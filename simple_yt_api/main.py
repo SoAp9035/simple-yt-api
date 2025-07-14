@@ -73,16 +73,13 @@ class YouTubeAPI:
         Raises:
             TranscriptsDisabled: Transcripts Disabled
             NoTranscriptFound: No Transcript Found
-        """
-        data = self.data(url)
-        time.sleep(1)
-
-        if isinstance(data, dict):
-            video_id = data.get("video_id", None)
-        else:
-            video_id = None
-        
+        """        
         try:
+            data = self.data(url)
+            time.sleep(1)
+
+            video_id = data["video_id"]
+
             ytt_api = YouTubeTranscriptApi()
             transcript_list = ytt_api.list(video_id)
             transcript = transcript_list.find_transcript([language_code])
