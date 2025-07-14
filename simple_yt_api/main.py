@@ -1,4 +1,5 @@
 import time
+import logging
 import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -123,10 +124,10 @@ class YouTubeAPI:
             transcript = self.get_transcript(url=url, language_code=language_code, as_dict=as_dict)
         except (TranscriptsDisabled, NoTranscriptFound) as e:
             transcript = None
-            print("Warning! Simple YT API:", e)
+            logging.warning(f"Simple YT API: {e}")
         except Exception as e:
             data = None
             transcript = None
-            print("Warning! Simple YT API:", e)
+            logging.warning(f"Simple YT API: {e}")
 
         return data, transcript
