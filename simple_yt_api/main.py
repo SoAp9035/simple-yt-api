@@ -1,11 +1,18 @@
 import time
+import random
 import logging
 import requests
 from bs4 import BeautifulSoup
-from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api import _errors
-from .exceptions import NoVideoFound, NoMetadataFound, TranscriptsDisabled, NoTranscriptFound
 from .utils import transcript_list_to_text
+from youtube_transcript_api import _errors
+from youtube_transcript_api import YouTubeTranscriptApi
+from .exceptions import (
+    YouTubeAPIError,
+    NoVideoFound,
+    NoMetadataFound,
+    TranscriptsDisabled,
+    NoTranscriptFound
+)
 
 
 class YouTubeAPI:
@@ -76,8 +83,9 @@ class YouTubeAPI:
             NoTranscriptFound: No Transcript Found
         """        
         try:
+            time.sleep(random.uniform(0.25, 0.75))
             data = self.data(url)
-            time.sleep(1)
+            time.sleep(random.uniform(0.25, 0.75))
 
             video_id = data["video_id"]
 
@@ -100,7 +108,7 @@ class YouTubeAPI:
             except Exception:
                 raise NoTranscriptFound
         except Exception:
-            raise NoTranscriptFound
+            raise YouTubeAPIError
 
         return transcript_dict_list if as_dict else transcript_list_to_text(transcript_dict_list)
         
@@ -120,7 +128,7 @@ class YouTubeAPI:
         """
         try:
             data = self.data(url)
-            time.sleep(1)
+            time.sleep(random.uniform(0.25, 0.75))
             transcript = self.get_transcript(url=url, language_code=language_code, as_dict=as_dict)
         except (TranscriptsDisabled, NoTranscriptFound) as e:
             transcript = None
