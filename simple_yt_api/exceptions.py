@@ -1,3 +1,9 @@
+class YouTubeAPIError(Exception):
+    """Custom exception for YouTube API related errors."""
+    def __init__(self, message: str="YouTube API error"):
+        self.message = message
+        super().__init__(self.message)
+
 class NoVideoFound(Exception):
     """Custom exception when a video is not accessible or doesn't exist."""
     def __init__(self, message: str="Video is not accessible or doesn't exist"):
