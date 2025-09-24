@@ -11,6 +11,14 @@ An unofficial lightweight Python wrapper for extracting video metadata and trans
 
 ## Installation
 
+[uv](https://docs.astral.sh/uv/) is recommended for managing and installing packages in isolated environments.
+
+```bash
+uv add simple-yt-api
+```
+
+You can also install it using pip:
+
 ```bash
 pip install simple-yt-api
 ```
@@ -37,7 +45,7 @@ transcript = yt.get_transcript(
 ) # Get Turkish transcript. Defaults to "en".
 print(transcript)
 
-# Get both metadata and transcript at once
+# Or get both metadata and transcript at once
 data, transcript = yt.get_video_data_and_transcript(
     url=url,
     language_code="es",
@@ -78,13 +86,6 @@ The library includes custom exceptions:
 - `NoMetadataFound`: When no metadata is found for the video.
 - `TranscriptsDisabled`: When transcripts are not available for the video.
 - `NoTranscriptFound`: When no transcript is available for the video.
-
-## Requirements
-
-- Python >= 3.10
-- requests==2.32.4
-- beautifulsoup4==4.13.4
-- youtube-transcript-api==1.1.0
 
 ## Warning
 
