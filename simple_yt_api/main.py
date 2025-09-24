@@ -127,6 +127,7 @@ class YouTubeAPI:
                 - transcript (list[dict] | str): Video transcript, `None` if not found
         """
         try:
+            time.sleep(random.uniform(0.25, 0.75))
             data = self.data(url)
             time.sleep(random.uniform(0.25, 0.75))
             transcript = self.get_transcript(url=url, language_code=language_code, as_dict=as_dict)
