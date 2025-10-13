@@ -82,6 +82,7 @@ Returns both video metadata and transcript. If there is an error, that spot in t
 ## Error Handling
 
 The library includes custom exceptions:
+- `YouTubeAPIError`: For YouTube API related errors.
 - `NoVideoFound`: When a video is not accessible or doesn't exist.
 - `NoMetadataFound`: When no metadata is found for the video.
 - `TranscriptsDisabled`: When transcripts are not available for the video.
