@@ -79,6 +79,7 @@ class YouTubeAPI:
             list[dict] | str: The transcript in the requested format (list of dictionaries or string).
         
         Raises:
+            YouTubeAPIError: Youtube API Error
             TranscriptsDisabled: Transcripts Disabled
             NoTranscriptFound: No Transcript Found
         """        
@@ -102,7 +103,7 @@ class YouTubeAPI:
                     transcript = transcript_list.find_transcript(["en"])
                 else:
                     transcript = transcript_list.find_transcript([language_codes[0]])
-
+                
                 translated_transcript = transcript.translate(language_code)
                 transcript_dict_list = translated_transcript.fetch().to_raw_data()
             except Exception:
