@@ -22,8 +22,8 @@ classifiers = [
 keywords = ["simple", "unofficial", "youtube", "api", "wrapper"]
 dependencies = [
     "requests==2.32.5",
-    "beautifulsoup4==4.14.2",
-    "youtube-transcript-api==1.2.2",
+    "beautifulsoup4==4.14.3",
+    "youtube-transcript-api==1.2.3",
 ]
 requires-python = ">=3.10"
 
