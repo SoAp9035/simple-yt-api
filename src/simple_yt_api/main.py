@@ -129,7 +129,7 @@ class YouTubeAPI:
 
         Returns:
             tuple:
-                - data (VideoData | None) | None: Video metadata, `None` if not found
+                - data (VideoData | None): Video metadata, `None` if not found
                 - transcript (list[dict] | str | None): Video transcript, `None` if not found
         """
         try:
