@@ -1,6 +1,7 @@
 import logging
 import requests
 from bs4 import BeautifulSoup
+from .models import VideoData
 from .utils import transcript_list_to_text
 from youtube_transcript_api import _errors
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -21,7 +22,7 @@ class YouTubeAPI:
     def __init__(self) -> None:
         self._user_agent = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 
-    def data(self, url: str) -> dict:
+    def data(self, url: str) -> VideoData:
         """
         Returns video metadata dictionary containing:
             - `video_id`: YouTube video ID
@@ -49,18 +50,18 @@ class YouTubeAPI:
             video_id = soup.find(name="meta", property="og:url").get("content")[32:]
             title = soup.find(name="meta", property="og:title").get("content")
             img_url = soup.find(name="meta", property="og:image").get("content")
-            description = soup.find(name="meta", property="og:description").get(
+            short_description = soup.find(name="meta", property="og:description").get(
                 "content"
             )
         except Exception:
             raise NoMetadataFound
 
-        return {
-            "video_id": video_id,
-            "title": title,
-            "img_url": img_url,
-            "short_description": description,
-        }
+        return VideoData(
+            video_id=video_id,
+            title=title,
+            img_url=img_url,
+            short_description=short_description,
+        )
 
     def get_transcript(
         self, url: str, language_code: str = "en", as_dict: bool = True
@@ -83,9 +84,8 @@ class YouTubeAPI:
             NoTranscriptFound: No Transcript Found
         """
         try:
-            data = self.data(url)
-
-            video_id = data["video_id"]
+            data: VideoData = self.data(url)
+            video_id = data.video_id
 
             ytt_api = YouTubeTranscriptApi()
             transcript_list = ytt_api.list(video_id)
@@ -118,7 +118,7 @@ class YouTubeAPI:
 
     def get_video_data_and_transcript(
         self, url: str, language_code: str = "en", as_dict: bool = True
-    ) -> tuple:
+    ) -> tuple[VideoData | None, list[dict] | str | None]:
         """
         Returns both video metadata and transcript. If there is an error, that spot in the tuple will have `None` instead of a value.
 
@@ -129,8 +129,8 @@ class YouTubeAPI:
 
         Returns:
             tuple:
-                - data (dict): Video metadata, `None` if not found
-                - transcript (list[dict] | str): Video transcript, `None` if not found
+                - data (VideoData | None) | None: Video metadata, `None` if not found
+                - transcript (list[dict] | str | None): Video transcript, `None` if not found
         """
         try:
             data = self.data(url)
