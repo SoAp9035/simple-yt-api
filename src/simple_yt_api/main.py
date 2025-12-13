@@ -2,7 +2,7 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 from .models import VideoMetadata
-from .utils import transcript_list_to_text
+from .utils import extract_transcript_text
 from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import (
     YouTubeTranscriptApi,
@@ -106,7 +106,7 @@ class YouTubeAPI:
         )
 
     def fetch_transcript(
-        self, url_or_id: str, language_code: str = "en", as_dict: bool = True
+        self, url_or_id: str, language_code: str = "en", output_format: str = "json"
     ) -> list[dict] | str:
         """
         Returns the transcript of the video in requested language.
@@ -114,24 +114,28 @@ class YouTubeAPI:
         Args:
             url_or_id (str): The URL or ID of the YouTube video.
             language_code (str, optional): The language code for the desired transcript. Defaults to "en".
-            as_dict (bool, optional): If `True`, returns the transcript as a list of dictionaries;
-                otherwise, returns the transcript as a string. Defaults to `True`.
+            output_format (str, optional): The format of the output. Can be "json" (list of dictionaries)
+                or "text" (string). Defaults to "json".
 
         Returns:
-            list[dict] | str: The transcript in the requested format (list of dictionaries or string).
+            list[dict] | str: The transcript in the requested format.
 
         Raises:
-            YouTubeAPIError: YoutubeAPI Error
+            YouTubeAPIError: If the format is invalid or an API error occurs.
             IpBlocked: Ip Blocked
             RequestBlocked: Request Blocked
             TranscriptsDisabled: Transcripts Disabled
             NoTranscriptFound: No Transcript Found
         """
+        if output_format not in ["json", "text"]:
+            raise YouTubeAPIError(
+                f"Invalid output format '{output_format}'. Use 'json' or 'text'."
+            )
+
         try:
             video_id: str = self._extract_video_id(url_or_id)
 
-            ytt_api = YouTubeTranscriptApi()
-            transcript_list = ytt_api.list(video_id)
+            transcript_list = YouTubeTranscriptApi().list(video_id)
             transcript = transcript_list.find_transcript([language_code])
             transcript_items = transcript.fetch().to_raw_data()
         except YtTranscriptsDisabled:
@@ -167,12 +171,15 @@ class YouTubeAPI:
         except Exception as e:
             raise YouTubeAPIError(e)
 
-        return (
-            transcript_items if as_dict else transcript_list_to_text(transcript_items)
-        )
+        if format == "json":
+            return transcript_items
+        elif format == "text":
+            return extract_transcript_text(transcript_items)
+
+        return transcript_items
 
     def fetch_all(
-        self, url_or_id: str, language_code: str = "en", as_dict: bool = True
+        self, url_or_id: str, language_code: str = "en", output_format: str = "json"
     ) -> tuple[VideoMetadata | None, list[dict] | str | None]:
         """
         Returns both video metadata and transcript. If there is an error, that spot in the tuple will have `None` instead of a value.
@@ -180,7 +187,8 @@ class YouTubeAPI:
         Args:
             url_or_id (str): The URL or ID of the YouTube video.
             language_code (str, optional): The language code for the desired transcript. Defaults to "en".
-            as_dict (bool, optional): If `True`, returns the transcript as a list of dictionaries; otherwise, returns the transcript as a string. Defaults to `True`.
+            output_format (str, optional): The format of the output. Can be "json" (list of dictionaries)
+                or "text" (string). Defaults to "json".
 
         Returns:
             tuple:
@@ -192,7 +200,9 @@ class YouTubeAPI:
         try:
             data = self.fetch_metadata(url_or_id)
             transcript = self.fetch_transcript(
-                url_or_id=url_or_id, language_code=language_code, as_dict=as_dict
+                url_or_id=url_or_id,
+                language_code=language_code,
+                output_format=output_format,
             )
         except (
             YouTubeAPIError,
