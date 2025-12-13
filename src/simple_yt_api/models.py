@@ -1,4 +1,4 @@
-class VideoData:
+class VideoMetadata:
     """Youtube video metadata."""
 
     def __init__(
