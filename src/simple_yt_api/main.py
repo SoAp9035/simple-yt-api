@@ -3,11 +3,18 @@ import requests
 from bs4 import BeautifulSoup
 from .models import VideoMetadata
 from .utils import transcript_list_to_text
-from youtube_transcript_api import _errors
 from urllib.parse import urlparse, parse_qs
-from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api import (
+    YouTubeTranscriptApi,
+    TranscriptsDisabled as YtTranscriptsDisabled,
+    NoTranscriptFound as YtNoTranscriptFound,
+    RequestBlocked as YtRequestBlocked,
+    IpBlocked as YtIpBlocked,
+)
 from .exceptions import (
     YouTubeAPIError,
+    IpBlocked,
+    RequestBlocked,
     NoVideoFound,
     NoMetadataFound,
     TranscriptsDisabled,
@@ -76,7 +83,7 @@ class YouTubeAPI:
 
         response = requests.get(url, headers=self._user_agent, timeout=10)
         if response.status_code != 200:
-            raise NoVideoFound
+            raise NoVideoFound()
 
         youtube_html = response.text
         soup = BeautifulSoup(youtube_html, "html.parser")
@@ -89,7 +96,7 @@ class YouTubeAPI:
                 name="meta", property="og:description"
             ).get("content")
         except Exception:
-            raise NoMetadataFound
+            raise NoMetadataFound()
 
         return VideoMetadata(
             video_id=video_id,
@@ -114,7 +121,9 @@ class YouTubeAPI:
             list[dict] | str: The transcript in the requested format (list of dictionaries or string).
 
         Raises:
-            YouTubeAPIError: Youtube API Error
+            YouTubeAPIError: YoutubeAPI Error
+            IpBlocked: Ip Blocked
+            RequestBlocked: Request Blocked
             TranscriptsDisabled: Transcripts Disabled
             NoTranscriptFound: No Transcript Found
         """
@@ -124,30 +133,42 @@ class YouTubeAPI:
             ytt_api = YouTubeTranscriptApi()
             transcript_list = ytt_api.list(video_id)
             transcript = transcript_list.find_transcript([language_code])
-            transcript_dict_list = transcript.fetch().to_raw_data()
-        except _errors.TranscriptsDisabled:
-            raise TranscriptsDisabled
-        except _errors.NoTranscriptFound:
+            transcript_items = transcript.fetch().to_raw_data()
+        except YtTranscriptsDisabled:
+            raise TranscriptsDisabled()
+        except YtNoTranscriptFound:
             try:
-                language_codes = [
-                    transcript.language_code for transcript in transcript_list
-                ]
-                if "en" in language_codes:
-                    transcript = transcript_list.find_transcript(["en"])
-                else:
-                    transcript = transcript_list.find_transcript([language_codes[0]])
+                logging.warning(
+                    "YouTubeAPI: Requested language not found; attempting translation."
+                )
+                available_langs = [t.language_code for t in transcript_list]
+                if not available_langs:
+                    raise NoTranscriptFound()
+
+                source_lang = "en" if "en" in available_langs else available_langs[0]
+                transcript = transcript_list.find_transcript([source_lang])
 
                 translated_transcript = transcript.translate(language_code)
-                transcript_dict_list = translated_transcript.fetch().to_raw_data()
-            except Exception:
-                raise NoTranscriptFound
-        except Exception:
-            raise YouTubeAPIError
+                transcript_items = translated_transcript.fetch().to_raw_data()
+            except YtRequestBlocked:
+                raise RequestBlocked()
+            except YtIpBlocked:
+                raise IpBlocked()
+            except NoTranscriptFound:
+                if not available_langs:
+                    raise NoTranscriptFound()
+                raise NoTranscriptFound(
+                    f"The requested language is not available for this video. Available languages: {', '.join(available_langs)}"
+                )
+        except YtRequestBlocked:
+            raise RequestBlocked()
+        except YtIpBlocked:
+            raise IpBlocked()
+        except Exception as e:
+            raise YouTubeAPIError(e)
 
         return (
-            transcript_dict_list
-            if as_dict
-            else transcript_list_to_text(transcript_dict_list)
+            transcript_items if as_dict else transcript_list_to_text(transcript_items)
         )
 
     def fetch_all(
@@ -166,17 +187,28 @@ class YouTubeAPI:
                 - data (VideoMetadata | None): Video metadata, `None` if not found
                 - transcript (list[dict] | str | None): Video transcript, `None` if not found
         """
+        data = None
+        transcript = None
         try:
             data = self.fetch_metadata(url_or_id)
             transcript = self.fetch_transcript(
                 url_or_id=url_or_id, language_code=language_code, as_dict=as_dict
             )
-        except (TranscriptsDisabled, NoTranscriptFound) as e:
+        except (
+            YouTubeAPIError,
+            RequestBlocked,
+            IpBlocked,
+            TranscriptsDisabled,
+            NoTranscriptFound,
+        ) as e:
             transcript = None
-            logging.warning(f"Simple YT API: {e}")
+            logging.warning(f"YouTubeAPI: {e}")
+        except (NoVideoFound, NoMetadataFound) as e:
+            data = None
+            logging.warning(f"YouTubeAPI: {e}")
         except Exception as e:
             data = None
             transcript = None
-            logging.warning(f"Simple YT API: {e}")
+            logging.warning(f"YouTubeAPI: {e}")
 
         return data, transcript
