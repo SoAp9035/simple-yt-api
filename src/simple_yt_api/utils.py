@@ -1,14 +1,11 @@
-def transcript_list_to_text(transcript_dict_list: list[dict]) -> str:
+def extract_transcript_text(transcript_items: list[dict]) -> str:
     """
     Convert a list of transcript dictionaries to a single text string.
 
     Args:
-        transcript_dict_list (list[dict]): List of dictionaries, each containing a "text" key.
+        transcript_items (list[dict]): List of dictionaries, each containing a "text" key.
 
     Returns:
-        str: Linked transcript text.
+        str: Concatenated transcript text.
     """
-    transcript_text = ""
-    for tct in transcript_dict_list:
-        transcript_text += " " + tct["text"]
-    return transcript_text.replace("  ", " ").strip()
+    return " ".join(tct["text"] for tct in transcript_items).replace("  ", " ").strip()
