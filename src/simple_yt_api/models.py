@@ -2,12 +2,12 @@ class VideoMetadata:
     """Youtube video metadata."""
 
     def __init__(
-        self, video_id: int, title: str, img_url: str, short_description: str
+        self, video_id: str, title: str, img_url: str, short_description: str
     ) -> None:
-        self.video_id = video_id
-        self.title = title
-        self.img_url = img_url
-        self.short_description = short_description
+        self.video_id: str = video_id
+        self.title: str = title
+        self.img_url: str = img_url
+        self.short_description: str = short_description
 
     def to_dict(self) -> dict[str, any]:
         return {
