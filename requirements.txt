@@ -1,3 +1,0 @@
-requests==2.32.5
-beautifulsoup4==4.14.2
-youtube-transcript-api==1.2.2
