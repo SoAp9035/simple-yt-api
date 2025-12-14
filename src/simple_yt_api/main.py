@@ -53,7 +53,9 @@ class YouTubeAPI:
 
         # Shortened link
         if "youtu.be" in result.hostname:
-            return path.split("/")[0]
+            video_id = path.split("/")[0]
+            if video_id:
+                return video_id
 
         raise NoVideoFound("Couldn't extract video id.")
 
