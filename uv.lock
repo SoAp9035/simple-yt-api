@@ -148,7 +148,7 @@ wheels = [
 
 [[package]]
 name = "simple-yt-api"
-version = "3.0.1"
+version = "4.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -158,9 +158,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beautifulsoup4", specifier = "==4.14.3" },
-    { name = "requests", specifier = "==2.32.5" },
-    { name = "youtube-transcript-api", specifier = "==1.2.3" },
+    { name = "beautifulsoup4", specifier = ">=4.14.3" },
+    { name = "requests", specifier = ">=2.32.5" },
+    { name = "youtube-transcript-api", specifier = ">=1.2.3" },
 ]
 
 [[package]]
