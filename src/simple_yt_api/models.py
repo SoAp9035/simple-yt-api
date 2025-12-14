@@ -9,7 +9,7 @@ class VideoMetadata:
         self.img_url: str = img_url
         self.short_description: str = short_description
 
-    def to_dict(self) -> dict[str, any]:
+    def to_dict(self) -> dict[str, str]:
         return {
             "video_id": self.video_id,
             "title": self.title,
