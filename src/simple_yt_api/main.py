@@ -8,6 +8,7 @@ from youtube_transcript_api import (
     YouTubeTranscriptApi,
     TranscriptsDisabled as YtTranscriptsDisabled,
     NoTranscriptFound as YtNoTranscriptFound,
+    TranslationLanguageNotAvailable as YtTranslationLanguageNotAvailable,
     RequestBlocked as YtRequestBlocked,
     IpBlocked as YtIpBlocked,
 )
@@ -158,7 +159,7 @@ class YouTubeAPI:
                 raise RequestBlocked()
             except YtIpBlocked:
                 raise IpBlocked()
-            except NoTranscriptFound:
+            except (YtNoTranscriptFound, YtTranslationLanguageNotAvailable):
                 if not available_langs:
                     raise NoTranscriptFound()
                 raise NoTranscriptFound(
