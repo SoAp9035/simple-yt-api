@@ -174,9 +174,9 @@ class YouTubeAPI:
         except Exception as e:
             raise YouTubeAPIError(e)
 
-        if format == "json":
+        if output_format == "json":
             return transcript_items
-        elif format == "text":
+        elif output_format == "text":
             return extract_transcript_text(transcript_items)
 
         return transcript_items
