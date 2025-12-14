@@ -60,16 +60,16 @@ class YouTubeAPI:
     def fetch_metadata(self, url_or_id: str) -> VideoMetadata:
         """
         Returns a VideoMetadata instance containing:
-            - `video_id`: YouTube video ID
-            - `title`: Video title
-            - `img_url`: Thumbnail URL
-            - `short_description`: Short video description
+            - `video_id`: The YouTube ID
+            - `title`: The video title
+            - `img_url`: The thumbnail image URL
+            - `short_description`: A short description
 
         Args:
-            url_or_id (str): The URL or ID of the YouTube video.
+            url_or_id (str): The YouTube video URL or ID.
 
         Returns:
-            VideoMetadata: Video metadata object
+            VideoMetadata: An object containing the video details.
 
         Raises:
             NoVideoFound: No Video Found
@@ -113,7 +113,7 @@ class YouTubeAPI:
         Returns the transcript of the video in requested language.
 
         Args:
-            url_or_id (str): The URL or ID of the YouTube video.
+            url_or_id (str): The YouTube video URL or ID.
             language_code (str, optional): The language code for the desired transcript. Defaults to "en".
             output_format (str, optional): The format of the output. Can be "json" (list of dictionaries)
                 or "text" (string). Defaults to "json".
@@ -183,23 +183,23 @@ class YouTubeAPI:
         self, url_or_id: str, language_code: str = "en", output_format: str = "json"
     ) -> tuple[VideoMetadata | None, list[dict] | str | None]:
         """
-        Returns both video metadata and transcript. If there is an error, that spot in the tuple will have `None` instead of a value.
+        Returns the video metadata and transcript. If an error occurs, returns `None` for that item.
 
         Args:
-            url_or_id (str): The URL or ID of the YouTube video.
+            url_or_id (str): The YouTube video URL or ID.
             language_code (str, optional): The language code for the desired transcript. Defaults to "en".
             output_format (str, optional): The format of the output. Can be "json" (list of dictionaries)
                 or "text" (string). Defaults to "json".
 
         Returns:
             tuple:
-                - data (VideoMetadata | None): Video metadata, `None` if not found
-                - transcript (list[dict] | str | None): Video transcript, `None` if not found
+                - data (VideoMetadata | None): The video metadata, or `None` if missing.
+                - transcript (list[dict] | str | None): The video transcript, or `None` if missing.
         """
         data = None
         transcript = None
         try:
-            data = self.fetch_metadata(url_or_id)
+            data = self.fetch_metadata(url_or_id=url_or_id)
             transcript = self.fetch_transcript(
                 url_or_id=url_or_id,
                 language_code=language_code,
@@ -207,8 +207,8 @@ class YouTubeAPI:
             )
         except (
             YouTubeAPIError,
-            RequestBlocked,
             IpBlocked,
+            RequestBlocked,
             TranscriptsDisabled,
             NoTranscriptFound,
         ) as e:
