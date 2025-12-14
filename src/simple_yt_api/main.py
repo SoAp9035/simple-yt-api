@@ -59,11 +59,13 @@ class YouTubeAPI:
 
     def fetch_metadata(self, url_or_id: str) -> VideoMetadata:
         """
-        Returns a VideoMetadata instance containing:
+        Returns a `VideoMetadata` instance containing:
             - `video_id`: The YouTube ID
             - `title`: The video title
             - `img_url`: The thumbnail image URL
             - `short_description`: A short description
+
+        Use `.to_dict()` to convert to a dictionary.
 
         Args:
             url_or_id (str): The YouTube video URL or ID.
