@@ -65,7 +65,7 @@ class YouTubeAPI:
             - `video_id`: The YouTube ID
             - `title`: The video title
             - `img_url`: The thumbnail image URL
-            - `short_description`: A short description
+            - `description`: The video description
 
         Use `.to_dict()` to convert to a dictionary.
 
@@ -97,7 +97,7 @@ class YouTubeAPI:
         try:
             title: str = soup.find(name="meta", property="og:title").get("content")
             img_url: str = soup.find(name="meta", property="og:image").get("content")
-            short_description: str = soup.find(
+            description: str = soup.find(
                 name="meta", property="og:description"
             ).get("content")
         except Exception:
@@ -107,7 +107,7 @@ class YouTubeAPI:
             video_id=video_id,
             title=title,
             img_url=img_url,
-            short_description=short_description,
+            description=description,
         )
 
     def fetch_transcript(

@@ -6,7 +6,7 @@ An unofficial lightweight Python wrapper for extracting video metadata and trans
 
 ## Features
 
-- 🎥 Extract video metadata (title, thumbnail, short description)
+- 🎥 Extract video metadata (title, thumbnail, description)
 - 📝 Get video transcripts in various languages
 - ⚡ Simple and easy to use interface
 - 🔒 No API key required
@@ -48,7 +48,7 @@ Metadata: {
     'video_id': 'dQw4w9WgXcQ',
     'title': 'Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)',
     'img_url': 'https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-    'short_description': 'The official video for “Never Gonna Give You Up” by Rick Astley. Never: The Autobiography 📚 OUT NOW! Follow this link to get your copy and listen to Rick’s ...'
+    'description': 'The official video for “Never Gonna Give You Up” by Rick Astley. Never: The Autobiography 📚 OUT NOW! Follow this link to get your copy and listen to Rick’s ...'
 }
 Transcript: [
     {'text': '[♪♪♪]', 'start': 1.36, 'duration': 1.68},
@@ -75,7 +75,9 @@ Retrieves metadata for a specific video.
 | :--- | :--- | :--- |
 | `url_or_id` | `str` | The URL or ID of the YouTube video. |
 
-**Returns:** `VideoMetadata` object containing `video_id`, `title`, `img_url`, and `short_description`. Use `.to_dict()` to convert to a dictionary.
+**Returns:** `VideoMetadata` object containing `video_id`, `title`, `img_url`, and `description`. Use `.to_dict()` to convert to a dictionary.
+
+**Note:** `description` is not consistent about fully including the video description. It may be truncated in some cases.
 
 #### `fetch_transcript(url_or_id: str, language_code: str = "en", output_format: str = "json") -> list[dict] | str`
 Retrieves the transcript for a specific video.
