@@ -36,7 +36,7 @@ classifiers = [
 dependencies = [
     "requests>=2.32.5",
     "beautifulsoup4>=4.14.3",
-    "youtube-transcript-api>=1.2.3",
+    "youtube-transcript-api>=1.2.4",
     "fake-useragent==2.2.0",
 ]
 
