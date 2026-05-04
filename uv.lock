@@ -123,6 +123,15 @@ wheels = [
 ]
 
 [[package]]
+name = "fake-useragent"
+version = "2.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/41/43/948d10bf42735709edb5ae51e23297d034086f17fc7279fef385a7acb473/fake_useragent-2.2.0.tar.gz", hash = "sha256:4e6ab6571e40cc086d788523cf9e018f618d07f9050f822ff409a4dfe17c16b2", size = 158898, upload-time = "2025-04-14T15:32:19.238Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/51/37/b3ea9cd5558ff4cb51957caca2193981c6b0ff30bd0d2630ac62505d99d0/fake_useragent-2.2.0-py3-none-any.whl", hash = "sha256:67f35ca4d847b0d298187443aaf020413746e56acd985a611908c73dba2daa24", size = 161695, upload-time = "2025-04-14T15:32:17.732Z" },
+]
+
+[[package]]
 name = "idna"
 version = "3.11"
 source = { registry = "https://pypi.org/simple" }
@@ -148,10 +157,11 @@ wheels = [
 
 [[package]]
 name = "simple-yt-api"
-version = "4.0.0"
+version = "4.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
+    { name = "fake-useragent" },
     { name = "requests" },
     { name = "youtube-transcript-api" },
 ]
@@ -159,8 +169,9 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
+    { name = "fake-useragent", specifier = "==2.2.0" },
     { name = "requests", specifier = ">=2.32.5" },
-    { name = "youtube-transcript-api", specifier = ">=1.2.3" },
+    { name = "youtube-transcript-api", specifier = ">=1.2.4" },
 ]
 
 [[package]]
@@ -192,13 +203,13 @@ wheels = [
 
 [[package]]
 name = "youtube-transcript-api"
-version = "1.2.3"
+version = "1.2.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "defusedxml" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/87/03/68c69b2d3e282d45cb3c07e5836a9146ff9574cde720570ffc7eb124e56b/youtube_transcript_api-1.2.3.tar.gz", hash = "sha256:76016b71b410b124892c74df24b07b052702cf3c53afb300d0a2c547c0b71b68", size = 469757, upload-time = "2025-10-13T15:57:17.532Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/60/43/4104185a2eaa839daa693b30e15c37e7e58795e8e09ec414f22b3db54bec/youtube_transcript_api-1.2.4.tar.gz", hash = "sha256:b72d0e96a335df599d67cee51d49e143cff4f45b84bcafc202ff51291603ddcd", size = 469839, upload-time = "2026-01-29T09:09:17.088Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ef/75/a861661b73d862e323c12af96ecfb237fb4d1433e551183d4172d39d5275/youtube_transcript_api-1.2.3-py3-none-any.whl", hash = "sha256:0c1b32ea5e739f9efde8c42e3d43e67df475185af6f820109607577b83768375", size = 485140, upload-time = "2025-10-13T15:57:16.034Z" },
+    { url = "https://files.pythonhosted.org/packages/be/95/129ea37efd6cd6ed00f62baae6543345c677810b8a3bf0026756e1d3cf3c/youtube_transcript_api-1.2.4-py3-none-any.whl", hash = "sha256:03878759356da5caf5edac77431780b91448fb3d8c21d4496015bdc8a7bc43ff", size = 485227, upload-time = "2026-01-29T09:09:15.427Z" },
 ]

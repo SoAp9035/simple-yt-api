@@ -2,7 +2,7 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 from .models import VideoMetadata
-from .utils import extract_transcript_text
+from .utils import extract_transcript_text, get_user_agent
 from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import (
     YouTubeTranscriptApi,
@@ -29,7 +29,7 @@ class YouTubeAPI:
     """
 
     def __init__(self) -> None:
-        self._user_agent = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+        pass
 
     def _extract_video_id(self, url_or_id: str) -> str:
         """Returns video id."""
@@ -65,7 +65,7 @@ class YouTubeAPI:
             - `video_id`: The YouTube ID
             - `title`: The video title
             - `img_url`: The thumbnail image URL
-            - `short_description`: A short description
+            - `description`: The video description
 
         Use `.to_dict()` to convert to a dictionary.
 
@@ -86,7 +86,7 @@ class YouTubeAPI:
         if not url.startswith(("http://", "https://")):
             url = "https://" + url
 
-        response = requests.get(url, headers=self._user_agent, timeout=10)
+        response = requests.get(url, headers={"User-Agent": get_user_agent()}, timeout=10)
         if response.status_code != 200:
             raise NoVideoFound()
 
@@ -97,7 +97,7 @@ class YouTubeAPI:
         try:
             title: str = soup.find(name="meta", property="og:title").get("content")
             img_url: str = soup.find(name="meta", property="og:image").get("content")
-            short_description: str = soup.find(
+            description: str = soup.find(
                 name="meta", property="og:description"
             ).get("content")
         except Exception:
@@ -107,7 +107,7 @@ class YouTubeAPI:
             video_id=video_id,
             title=title,
             img_url=img_url,
-            short_description=short_description,
+            description=description,
         )
 
     def fetch_transcript(
