@@ -63,43 +63,19 @@ More examples can be found in the [examples](examples/) directory.
 
 ## API Reference
 
-### `YouTubeAPI` Class
+Create a client with:
 
-#### `YouTubeAPI()`
-Initializes the API client.
+```python
+yt = YouTubeAPI()
+```
 
-#### `fetch_metadata(url_or_id: str) -> VideoMetadata`
-Retrieves metadata for a specific video.
+Available methods:
 
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `url_or_id` | `str` | The URL or ID of the YouTube video. |
+- `fetch_metadata(url_or_id)` - returns a `VideoMetadata` object with `video_id`, `title`, `img_url`, and `description`.
+- `fetch_transcript(url_or_id, language_code="en", output_format="json")` - returns transcript data as JSON (`list[dict]`) or plain text.
+- `fetch_all(url_or_id, language_code="en", output_format="json")` - returns `(metadata, transcript)` in one call.
 
-**Returns:** `VideoMetadata` object containing `video_id`, `title`, `img_url`, and `description`. Use `.to_dict()` to convert to a dictionary.
-
-**Note:** `description` is not consistent about fully including the video description. It may be truncated in some cases.
-
-#### `fetch_transcript(url_or_id: str, language_code: str = "en", output_format: str = "json") -> list[dict] | str`
-Retrieves the transcript for a specific video.
-
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `url_or_id` | `str` | - | The URL or ID of the YouTube video. |
-| `language_code` | `str` | `"en"` | The language code for the desired transcript. |
-| `output_format` | `str` | `"json"` | Output format: `"json"` (list of dicts) or `"text"` (string). |
-
-**Returns:** A list of dictionaries (JSON) or a plain string containing the transcript.
-
-#### `fetch_all(url_or_id: str, language_code: str = "en", output_format: str = "json") -> tuple`
-Convenience method to retrieve both metadata and transcript simultaneously.
-
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `url_or_id` | `str` | - | The URL or ID of the YouTube video. |
-| `language_code` | `str` | `"en"` | The language code for the desired transcript. |
-| `output_format` | `str` | `"json"` | Output format: `"json"` (list of dicts) or `"text"` (string). |
-
-**Returns:** A tuple `(metadata, transcript)`. If an error occurs for either part, that element will be `None`.
+`url_or_id` can be either a YouTube URL or a video ID. Use `metadata.to_dict()` if you need metadata as a dictionary.
 
 ---
 
