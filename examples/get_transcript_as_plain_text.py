@@ -4,7 +4,7 @@ from simple_yt_api import YouTubeAPI
 def main():
     yt = YouTubeAPI()
 
-    # A TED Talk video (usually has good captions)
+    # A TED Talk video
     url = "https://www.youtube.com/watch?v=8jPQjjsBbIc"
 
     metadata = yt.fetch_metadata(url)
